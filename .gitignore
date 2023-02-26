@@ -1,0 +1,6 @@
+logs/*
+backup-data/*
+.env
+temporary-import.ps1
+
+!**/.gitkeep
