@@ -100,11 +100,11 @@ def export_microsoft_todo(export_filename):
         while uri:
             response = requests.get(uri, headers=headers)
             list_page = response.json()
-            list_tasks = list_page["value"]
-
-            for task in list_tasks:
-                del task["@odata.etag"]
-                resulting_tasks.append(task)
+            list_tasks = list_page.get("value")
+            if list_tasks is not None:
+                for task in list_tasks:
+                    del task["@odata.etag"]
+                    resulting_tasks.append(task)
 
             # have to use .get because sometimes @odata.nextLink can be None
             uri = list_page.get("@odata.nextLink")
