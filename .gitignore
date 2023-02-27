@@ -1,6 +1,10 @@
-logs/*
-backup-data/*
 .env
+backup-data/*
 temporary-import.ps1
+
+
+/**/node_modules/
+/**/.browser/
+/**/logs/*
 
 !**/.gitkeep

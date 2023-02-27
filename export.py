@@ -3,13 +3,21 @@ import json
 from datetime import datetime
 import logging
 import os
+import subprocess
 from dotenv import load_dotenv
 
 load_dotenv()
 
-todos_token = os.getenv("TODOS_TOKEN")
+ms_login = os.getenv("MS_LOGIN")
+ms_password = os.getenv("MS_PASSWORD")
 gotify_token = os.getenv("GOTIFY_TOKEN")
 gotify_url = os.getenv("GOTIFY_URL")
+
+crawl_process = subprocess.run(
+    f"node scripts/get-token/index.js {ms_login} {ms_password}", capture_output=True
+)
+
+todos_token = crawl_process.stdout.decode("utf8").strip()
 
 logger_format = "%(asctime)s %(name)s %(levelname)s %(message)s"
 logger_datefmt = "%Y-%m-%d %H:%M:%S"
@@ -17,6 +25,7 @@ logger_datefmt = "%Y-%m-%d %H:%M:%S"
 logging.basicConfig(
     filename="logs/debug.log",
     filemode="a",
+    encoding="utf8",
     format=logger_format,
     datefmt=logger_datefmt,
     level=logging.DEBUG,
@@ -25,13 +34,13 @@ logging.basicConfig(
 logger = logging.getLogger("logger")
 logger_formatter = logging.Formatter(logger_format, logger_datefmt)
 
-info_handler = logging.FileHandler("logs/info.log")
+info_handler = logging.FileHandler("logs/info.log", encoding="utf8")
 info_handler.setLevel(logging.INFO)
 
-warning_handler = logging.FileHandler("logs/warning.log")
+warning_handler = logging.FileHandler("logs/warning.log", encoding="utf8")
 warning_handler.setLevel(logging.WARNING)
 
-error_handler = logging.FileHandler("logs/error.log")
+error_handler = logging.FileHandler("logs/error.log", encoding="utf8")
 error_handler.setLevel(logging.ERROR)
 
 info_handler.setFormatter(logger_formatter)
@@ -120,7 +129,6 @@ def main():
     try:
         export_microsoft_todo(f"backup-data/backup--{timestamp}.json")
     except Exception as e:
-        raise e
         logger.error(str(e))
         call_help("Unexpected error happened! Take some action!")
 

@@ -1,0 +1,8 @@
+{
+  "type": "module",
+  "dependencies": {
+    "pretty-error": "^4.0.0",
+    "puppeteer": "^19.7.2",
+    "winston": "^3.8.2"
+  }
+}
