@@ -13,8 +13,9 @@ ms_password = os.getenv("MS_PASSWORD")
 gotify_token = os.getenv("GOTIFY_TOKEN")
 gotify_url = os.getenv("GOTIFY_URL")
 
+crawler = os.path.abspath("scripts/get-token/index.js")
 crawl_process = subprocess.run(
-    f"node scripts/get-token/index.js {ms_login} {ms_password}", capture_output=True
+    f"node '{crawler}' '{ms_login}' '{ms_password}'", shell=True, capture_output=True
 )
 
 todos_token = crawl_process.stdout.decode("utf8").strip()
@@ -22,17 +23,11 @@ todos_token = crawl_process.stdout.decode("utf8").strip()
 logger_format = "%(asctime)s %(name)s %(levelname)s %(message)s"
 logger_datefmt = "%Y-%m-%d %H:%M:%S"
 
-logging.basicConfig(
-    filename="logs/debug.log",
-    filemode="a",
-    encoding="utf8",
-    format=logger_format,
-    datefmt=logger_datefmt,
-    level=logging.DEBUG,
-)
-
 logger = logging.getLogger("logger")
 logger_formatter = logging.Formatter(logger_format, logger_datefmt)
+
+debug_handler = logging.FileHandler("logs/debug.log", encoding="utf8")
+debug_handler.setLevel(logging.DEBUG)
 
 info_handler = logging.FileHandler("logs/info.log", encoding="utf8")
 info_handler.setLevel(logging.INFO)
@@ -43,10 +38,12 @@ warning_handler.setLevel(logging.WARNING)
 error_handler = logging.FileHandler("logs/error.log", encoding="utf8")
 error_handler.setLevel(logging.ERROR)
 
+debug_handler.setFormatter(logger_formatter)
 info_handler.setFormatter(logger_formatter)
 warning_handler.setFormatter(logger_formatter)
 error_handler.setFormatter(logger_formatter)
 
+logger.addHandler(debug_handler)
 logger.addHandler(info_handler)
 logger.addHandler(warning_handler)
 logger.addHandler(error_handler)
