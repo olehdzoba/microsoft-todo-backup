@@ -19,6 +19,9 @@ crawl_process = subprocess.run(
 )
 
 todos_token = crawl_process.stdout.decode("utf8").strip()
+if not todos_token.startswith("Ew"):
+    print("Couldn't retrieve the token!")
+    exit(1)
 
 logger_format = "%(asctime)s %(name)s %(levelname)s %(message)s"
 logger_datefmt = "%Y-%m-%d %H:%M:%S"
