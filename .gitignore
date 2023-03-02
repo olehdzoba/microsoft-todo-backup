@@ -1,10 +1,11 @@
 .env
-backup-data/*
-temporary-import.ps1
+node_modules/
 
+# created at runtime
+.browser/
+.data/
+logs/
 
-/**/node_modules/
-/**/.browser/
-/**/logs/*
+# for testing purposes
+backup/
 
-!**/.gitkeep
