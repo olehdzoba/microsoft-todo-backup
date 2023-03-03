@@ -17,5 +17,6 @@
 - [ ] To add backup compression
 - [ ] To add backup import
 - [ ] To add backup encryption
+- [ ] To test properly
 
 ## Contributing
