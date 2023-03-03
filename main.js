@@ -1,8 +1,12 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import subprocess from "child_process";
+import fs from "fs";
+console.log(fs);
 import { program } from "commander";
-import { initializeBackup, loadEnvironmentParams } from "./lib/initialize.js";
-import { notifyAboutWaiting } from "./lib/notify.js";
-// import { executeBackup } from "./lib/backup.js";
+import { initializeBackup, initializeFromEnvironment } from "./lib/initialize.js";
+import { executeBackup } from "./lib/backup.js";
 
 main();
 
@@ -12,26 +16,18 @@ async function main() {
     .description("Makes regular backup of your lists and tasks in Microsoft To-Do")
     .version("0.1.0");
 
-  program.option("-i, --interactive", "run in interactive mode with prompts");
-  program.option("-r, --generate-reports", "send report about backups once a month");
-  program.option(
-    "-w, --wait-notification",
-    "notifies you when backup is started and waits for your initialization"
-  );
+  program.option("--non-interactive", "load parameters from environment instead of prompts");
 
   program.parse();
-  const { interactive, generateReports, waitNotification } = program.opts();
+  const { nonInteractive } = program.opts();
 
-  if (interactive && waitNotification) await notifyAboutWaiting();
+  const backupParams = nonInteractive ? initializeFromEnvironment() : await initializeBackup();
+  if (backupParams === null) return;
 
-  console.log({ interactive, generateReports, waitNotification });
-
-  const backupParams = interactive ? await initializeBackup() : loadEnvironmentParams();
-
-  if (backupParams.backupRepeat == null) await executeBackup(backupParams);
-  if (false) {
+  if (backupParams.backupRepeatPattern == null) {
+    await executeBackup(backupParams);
   } else {
-    const args = generateReports ? ["--report"] : [];
+    const args = backupParams.generateReports ? ["--report"] : [];
     const service = subprocess.fork("background.js", args, { detached: true });
 
     service.on("message", () => {
