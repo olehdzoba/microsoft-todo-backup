@@ -7,7 +7,7 @@ if (process.argv.includes("--report")) {
 }
 
 process.on("message", (backupParams) => {
-  cron.schedule(backupParams.backupRepeat, () => executeBackup(backupParams));
+  cron.schedule(backupParams.backupRepeatPattern, () => executeBackup(backupParams));
 });
 
 process.send("launch");

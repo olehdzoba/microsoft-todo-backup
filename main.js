@@ -3,7 +3,7 @@ dotenv.config();
 
 import subprocess from "child_process";
 import fs from "fs";
-console.log(fs);
+//console.log(fs);
 import { program } from "commander";
 import { initializeBackup, initializeFromEnvironment } from "./lib/initialize.js";
 import { executeBackup } from "./lib/backup.js";
