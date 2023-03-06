@@ -119,6 +119,7 @@ Here is a list of potential impovements. If feel like helping this project, you 
 - [ ] To add backup import
 - [ ] To add backup encryption
 - [ ] To test properly
+- [ ] Implement a command to uninstall background cronjob
 
 ## Contributing
 
