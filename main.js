@@ -33,6 +33,7 @@ async function main() {
     service.on("message", () => {
       // service was launched
       service.send(backupParams);
+      console.log("Cronjob was set up successfully!");
       process.exit();
     });
 
